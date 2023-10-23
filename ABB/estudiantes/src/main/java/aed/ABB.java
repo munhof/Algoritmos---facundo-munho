@@ -104,22 +104,15 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         }
     }
 
-    public void eliminar(T elem) {
-        Nodo resultado = eliminarRecursivo(_Raiz, elem);
-        if (resultado != null) {
-            _Raiz = resultado; // Actualizamos la raíz si ha cambiado
-            _Cardinal--;
-        }
-    }
-    
     private Nodo eliminarRecursivo(Nodo raiz, T elem) {
         if (raiz == null) {
             return raiz; // El elemento no se encontró en el árbol
         }
     
-        if (elem.compareTo(raiz.valor) < 0) {
+        int comparacion = elem.compareTo(raiz.valor);
+        if (comparacion < 0) {
             raiz.izq = eliminarRecursivo(raiz.izq, elem);
-        } else if (elem.compareTo(raiz.valor) > 0) {
+        } else if (comparacion > 0) {
             raiz.der = eliminarRecursivo(raiz.der, elem);
         } else {
             // Este es el nodo que queremos eliminar
@@ -127,10 +120,11 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
                 return raiz.der; // Caso 1: Nodo con un solo hijo o ningún hijo
             } else if (raiz.der == null) {
                 return raiz.izq; // Caso 1: Nodo con un solo hijo o ningún hijo
+            } else {
+                // Caso 2: Nodo con dos hijos, obtenemos el sucesor inorden (nodo más pequeño en el subárbol derecho)
+                raiz.valor = minimoValor(raiz.der);
+                raiz.der = eliminarRecursivo(raiz.der, raiz.valor);
             }
-            // Caso 2: Nodo con dos hijos, obtenemos el sucesor inorden (nodo más pequeño en el subárbol derecho)
-            raiz.valor = minimoValor(raiz.der);
-            raiz.der = eliminarRecursivo(raiz.der, raiz.valor);
         }
         return raiz;
     }
