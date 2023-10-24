@@ -64,6 +64,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
             return;
         } 
         Nodo anterior = null;
+
         while (actual != null) {
             anterior = actual;
             if (elem.compareTo(actual.valor) < 0) {
@@ -85,67 +86,70 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     }
     
 
+    
+
     public boolean pertenece(T elem) {
-        return buscarElemento(_Raiz, elem);
+        return buscar(_Raiz,elem);
     }
-    
-    private boolean buscarElemento(Nodo nodo, T elem) {
-        if (nodo == null) {
-            return false; // El elemento no se encontró en el árbol
+
+    private boolean buscar(Nodo raiz, T elem) {
+        while (raiz != null) {
+        if (raiz.valor.compareTo(elem) < 0)
+                raiz = raiz.der;
+            // pass left subtree as new tree
+            else if (raiz.valor.compareTo(elem) > 0)
+                raiz = raiz.izq;
+            else
+                return true; // if the key is found return 1
         }
-    
-        int comparacion = elem.compareTo(nodo.valor);
-        if (comparacion < 0) {
-            return buscarElemento(nodo.izq, elem);
-        } else if (comparacion > 0) {
-            return buscarElemento(nodo.der, elem);
-        } else {
-            return true; // Elemento encontrado en el árbol
+        return false;
+    }
+
+    public void eliminar(T elem){
+        eliminarRecurivo(_Raiz, elem);
+        _Cardinal = _Cardinal - 1;
+    }
+
+    private Nodo eliminarRecurivo(Nodo raiz, T elem) {
+        if (raiz == null){
+            return raiz;
+        }
+            
+        if (raiz.valor.compareTo(elem) > 0){
+            raiz.izq = eliminarRecurivo(raiz.izq, elem);
+            return raiz;
+        } else if (raiz.valor.compareTo(elem) < 0){
+            _Raiz.der = eliminarRecurivo(raiz.der, elem);
+            return raiz;
+        }
+
+        if (raiz.izq == null){
+            Nodo aux = raiz.der;
+            return aux;
+        } else if (raiz.der == null){
+            Nodo aux = raiz.izq;
+            return aux;
+        }
+        else{
+            Nodo sucesorPadre = raiz;
+            Nodo sucesor = raiz.der;
+            while (sucesor.izq != null){
+                sucesorPadre = sucesor;
+                sucesor = sucesor.izq;
+            }
+            if (sucesor != raiz) {
+                sucesorPadre.izq = sucesor.der;
+            } else {
+                sucesorPadre.der = sucesor.der;
+            }
+
+            raiz.valor = sucesor.valor;
+
+            return raiz;
         }
     }
 
-    public void eliminar(T elem) {
-        Nodo resultado = eliminarRecursivo(_Raiz, elem);
-        if (resultado != null) {
-            _Raiz = resultado; // Actualizamos la raíz si ha cambiado
-            _Cardinal--;
-        }
-    }
     
-    private Nodo eliminarRecursivo(Nodo raiz, T elem) {
-        if (raiz == null) {
-            return raiz; // El elemento no se encontró en el árbol
-        }
-    
-        int comparacion = elem.compareTo(raiz.valor);
-        if (comparacion < 0) {
-            raiz.izq = eliminarRecursivo(raiz.izq, elem);
-        } else if (comparacion > 0) {
-            raiz.der = eliminarRecursivo(raiz.der, elem);
-        } else {
-            // Este es el nodo que queremos eliminar
-            if (raiz.izq == null) {
-                return raiz.der; // Caso 1: Nodo con un solo hijo o ningún hijo
-            } else if (raiz.der == null) {
-                return raiz.izq; // Caso 1: Nodo con un solo hijo o ningún hijo
-            } else {
-                // Caso 2: Nodo con dos hijos, obtenemos el sucesor inorden (nodo más pequeño en el subárbol derecho)
-                raiz.valor = minimoValor(raiz.der);
-                raiz.der = eliminarRecursivo(raiz.der, raiz.valor);
-            }
-        }
-        return raiz;
-    }
-    
-    
-    private T minimoValor(Nodo nodo) {
-        T minValor = nodo.valor;
-        while (nodo.izq != null) {
-            minValor = nodo.izq.valor;
-            nodo = nodo.izq;
-        }
-        return minValor;
-    }
     
     
 
