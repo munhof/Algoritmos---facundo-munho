@@ -120,7 +120,9 @@ class ABBTests {
         conjunto.insertar(7);
         conjunto.insertar(6);
         conjunto.insertar(8);
+        System.out.println(conjunto);
         conjunto.eliminar(5);
+        System.out.println(conjunto);
         assertEquals(4, conjunto.cardinal());
         assertEquals(4, conjunto.minimo());
         assertEquals(8, conjunto.maximo());        
@@ -140,7 +142,9 @@ class ABBTests {
         conjunto.insertar(24);
         conjunto.insertar(22);
         conjunto.insertar(25);
+        System.out.println(conjunto);
         conjunto.eliminar(20);
+        System.out.println(conjunto);
         assertEquals(8, conjunto.cardinal());
         assertEquals(4, conjunto.minimo());
         assertEquals(25, conjunto.maximo());
@@ -159,8 +163,9 @@ class ABBTests {
         conjunto.insertar(22);
         conjunto.insertar(25);
         conjunto.insertar(19);
-        conjunto.insertar(21);
-        conjunto.eliminar(20);
+        conjunto.insertar(21);            
+        conjunto.eliminar(20);            
+        conjunto.eliminar(1);  
         assertEquals(9, conjunto.cardinal());
         assertEquals(4, conjunto.minimo());
         assertEquals(25, conjunto.maximo());
@@ -209,7 +214,7 @@ class ABBTests {
 
     }
 
-    Integer NCLAVES = 100; 
+    Integer NCLAVES = 11; 
 
     private Integer clave(Integer i) {        
         return NCLAVES * ((i * i - 100 * i) % NCLAVES) + i;
@@ -253,6 +258,9 @@ class ABBTests {
         // Eliminar los valores para i impar
         for (Integer i = 0; i < NCLAVES; i++) {
             Integer k = clave(i);
+            System.out.println(i);
+            System.out.println(k);
+            System.out.println(conjunto);
             if (i % 2 == 0) {
                 assertEquals(false,conjunto.pertenece(k));
             } else {

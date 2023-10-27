@@ -105,24 +105,33 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         return false;
     }
 
+    /** 
     public void eliminar(T elem){
-        eliminarRecurivo(_Raiz, elem);
-        _Cardinal = _Cardinal - 1;
+        if (pertenece(elem)) {
+            eliminarRecurivo(_Raiz, elem);
+            _Cardinal = _Cardinal - 1;
+        }
+
     }
 
     private Nodo eliminarRecurivo(Nodo raiz, T elem) {
+
+        // si la raiz es nulo devuelve nulo
         if (raiz == null){
             return raiz;
         }
             
+        // reviso si el elemento es mayor o menor a la raiz actual
+        // hago recursion en el caso correspondiente
         if (raiz.valor.compareTo(elem) > 0){
             raiz.izq = eliminarRecurivo(raiz.izq, elem);
             return raiz;
         } else if (raiz.valor.compareTo(elem) < 0){
-            _Raiz.der = eliminarRecurivo(raiz.der, elem);
+            raiz.der = eliminarRecurivo(raiz.der, elem);
             return raiz;
         }
 
+        // si es nulo termino
         if (raiz.izq == null){
             Nodo aux = raiz.der;
             return aux;
@@ -131,7 +140,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
             return aux;
         }
         else{
-            Nodo sucesorPadre = raiz;
+            Nodo suceseorPadr = raiz;
             Nodo sucesor = raiz.der;
             while (sucesor.izq != null){
                 sucesorPadre = sucesor;
@@ -142,15 +151,132 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
             } else {
                 sucesorPadre.der = sucesor.der;
             }
-
             raiz.valor = sucesor.valor;
 
             return raiz;
         }
     }
+*/
+/**
+    public void eliminar(T elem) {
+        if (pertenece(elem)) {
+            eliminarRecurivo(_Raiz, elem);
+            _Cardinal = _Cardinal - 1;
+        }
+    }
 
+    private Nodo eliminarRecurivo(Nodo raiz, T elem) {
+        if (raiz == null) {
+            return raiz;
+        }
+
+        // Realizar la eliminación recursiva en el subárbol izquierdo o derecho según sea necesario
+        if (raiz.valor.compareTo(elem) > 0) {
+            raiz.izq = eliminarRecurivo(raiz.izq, elem);
+        } else if (raiz.valor.compareTo(elem) < 0) {
+            raiz.der = eliminarRecurivo(raiz.der, elem);
+        } else if (raiz.valor.compareTo(elem) == 0) {
+            // Si se encontró el elemento a eliminar
+            if (raiz.izq == null) {
+                return raiz.der;
+            } else if (raiz.der == null) {
+                return raiz.izq;
+            }else{
+                // Caso de dos hijos: encontrar el sucesor en orden y reemplazar el valor
+            Nodo sucesor = encontrarSucesor(raiz.der);
+            raiz.valor = sucesor.valor;
+            raiz.der = eliminarRecurivo(raiz.der, sucesor.valor);
+            }
+
+            
+        }
+
+        return raiz;
+    }
+
+    private Nodo encontrarSucesor(Nodo raiz) {
+        Nodo actual = raiz;
+        while (actual.izq != null) {
+            actual = actual.izq;
+        }
+        return actual;
+    }
     
-    
+    */
+
+    public void eliminar(T elem){
+        Nodo actual = _Raiz;
+        Nodo _padre = null;
+
+        while (actual!= null) {
+            int comparacion = elem.compareTo(actual.valor);
+
+            if (comparacion == 0) {
+                eliminarNodo (actual,_padre);
+                return;                
+            }else{
+                _padre = actual;
+
+                if (comparacion < 0 ) {
+                    actual=actual.izq;
+                    
+                }else{
+                    actual=actual.der;
+                }
+            }
+            
+        }
+
+    }
+
+    private void eliminarNodo(Nodo nodoAEliminar, Nodo padre) {
+
+        if (nodoAEliminar.izq == null && nodoAEliminar.der == null) {
+            // Caso 1: Nodo hoja, simplemente lo eliminamos
+            if (padre == null) {
+                _Raiz = null;
+                _Cardinal--;
+            } else if (padre.izq == nodoAEliminar) {
+                padre.izq = null;
+                _Cardinal--;
+            } else {
+                padre.der = null;
+                _Cardinal--;
+            }
+
+            } else if (nodoAEliminar.izq != null && nodoAEliminar.der != null) {
+                // Caso 3: Nodo con dos hijos
+                Nodo sucesor = encontrarSucesorInOrder(nodoAEliminar);
+
+                T valorSucesor = sucesor.valor;
+                eliminar(valorSucesor);
+                nodoAEliminar.valor = valorSucesor;
+                        
+
+            } else {
+                // Caso 2: Nodo con un hijo
+                Nodo hijo = (nodoAEliminar.izq != null) ? nodoAEliminar.izq : nodoAEliminar.der;
+                if (padre == null) {
+                    _Raiz = hijo;
+                    _Cardinal--;
+                } else if (padre.izq == nodoAEliminar) {
+                    padre.izq = hijo;
+                    _Cardinal--;
+                } else {
+                    padre.der = hijo;
+                    _Cardinal--;
+                }
+                
+            }
+    }
+
+    private Nodo encontrarSucesorInOrder(Nodo nodo) {
+        Nodo sucesor = nodo.der;
+        while (sucesor.izq != null) {
+            sucesor = sucesor.izq;
+        }
+        return sucesor;
+    }
     
 
     public String toString() {
@@ -180,7 +306,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         private Stack<Nodo> pila; // Usaremos una pila para realizar el recorrido en inorden
     
         public ABB_Iterador() {
-            _actual = _Raiz;
+            Nodo _actual = _Raiz;
             pila = new Stack<>();
             while (_actual != null) {
                 pila.push(_actual);
@@ -194,11 +320,11 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     
         public T siguiente() {
             if (!haySiguiente()) {
-                throw new NoSuchElementException("No hay más elementos para recorrer");
+                return null;
             }
     
-            _actual = pila.pop();
-            T valor = _actual.valor;
+            Nodo nodo = pila.pop();
+            Nodo _actual = nodo.der;
     
             // Avanzamos al siguiente nodo en inorden (subárbol derecho si existe)
             _actual = _actual.der;
@@ -207,7 +333,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
                 _actual = _actual.izq;
             }
     
-            return valor;
+            return nodo.valor;
         }
     }
     
