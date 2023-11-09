@@ -302,7 +302,6 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     
 
     private class ABB_Iterador implements Iterador<T> {
-        private Nodo _actual;
         private Stack<Nodo> pila; // Usaremos una pila para realizar el recorrido en inorden
     
         public ABB_Iterador() {
@@ -324,7 +323,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
             }
     
             Nodo nodo = pila.pop();
-            Nodo _actual = nodo.der;
+            Nodo _actual = nodo;
     
             // Avanzamos al siguiente nodo en inorden (subárbol derecho si existe)
             _actual = _actual.der;
