@@ -32,7 +32,7 @@ public class InternetToolkit {
         MaxHeap RouterRanking = new MaxHeap(routers.length);
         Router[] kTopRouters = new Router[k];
         //cargo el array
-        for (int i = 0; i < kTopRouters.length; i++) {
+        for (int i = 0; i < routers.length; i++) {
             Router router = routers[i]; 
             if (router.getTrafico() > umbral) {
                 RouterRanking.insert(router, router.getTrafico());
