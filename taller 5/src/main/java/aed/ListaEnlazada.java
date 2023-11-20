@@ -1,7 +1,7 @@
 package aed;
 
 
-public class ListaEnlazada<T> implements Secuencia<T> {
+public class ListaEnlazada<T> {
     private Nodo _primero;
     private Nodo _ultimo;
     private int _longitud;    
