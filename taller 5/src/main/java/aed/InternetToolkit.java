@@ -56,7 +56,7 @@ public class InternetToolkit {
         }
         int i = 3;
         while (i>=0) {
-            ListaEnlazada<IPv4Address>[] bucket = new ListaEnlazada[256];
+            final ListaEnlazada<IPv4Address>[] bucket = new ListaEnlazada[256];
             for (int j = 0; j < ipv4.length; j++) {
                 IPv4Address ip = sortIPv4[j];
                 if(bucket[ip.getOctet(i)] != null){
