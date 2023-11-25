@@ -1,18 +1,18 @@
 package aed;
 
-
 public class ListaEnlazada<T> {
-    private Nodo _primero;
-    private Nodo _ultimo;
-    private int _longitud;    
+    private Nodo _primero ;
+    private Nodo _ultimo ;
+    private int _longitud ;    
 
     private class Nodo {
         T valor;
         Nodo siguiente;
         Nodo anterior;
-
-        Nodo(T v) {valor = v; };
-    }
+        Nodo(T v) {
+                    valor = v;
+                 }
+        }
 
     public ListaEnlazada() {
         _primero = null;
@@ -38,7 +38,6 @@ public class ListaEnlazada<T> {
             segundo.anterior = _primero;
             _longitud ++ ;
         }
-
     }
 
     public void agregarAtras(T elem) {
@@ -71,32 +70,30 @@ public class ListaEnlazada<T> {
         Nodo actual = primero.siguiente;
         Nodo sucesor;
         Nodo antesesor;
-
+    
         if (_longitud > 1) {
             if (i == 0) {
-            _primero = actual;
-            _primero.anterior = null;
-        } else {
-            if (i == _longitud - 1) {
-                _ultimo = _ultimo.anterior;
-                _ultimo.siguiente = null;
+                _primero = actual;
+                _primero.anterior = null;
             } else {
-                for (int j = 1; j < i; j++) {
-                    actual = actual.siguiente;
+                if (i == _longitud - 1) {
+                    _ultimo = _ultimo.anterior;
+                    _ultimo.siguiente = null;
+                } else {
+                    for (int j = 1; j < i; j++) {
+                        actual = actual.siguiente;
+                    }
+                    sucesor = actual.siguiente;
+                    antesesor = actual.anterior;
+                    sucesor.anterior = antesesor;
+                    antesesor.siguiente = sucesor;
                 }
-                sucesor = actual.siguiente;
-                antesesor = actual.anterior;
-                sucesor.anterior = antesesor;
-                antesesor.siguiente = sucesor;
-            }  
-        }
+            }
         } else {
             _primero = null;
             _ultimo = null;
         }
-
-
-        _longitud --;
+        _longitud--;
     }
 
     public void modificarPosicion(int indice, T elem) {
@@ -108,34 +105,5 @@ public class ListaEnlazada<T> {
         }
         actual.valor = elem;
     }
-
-    public ListaEnlazada<T> copiar() {
-        ListaEnlazada copia = new ListaEnlazada();
-        copia.agregarAtras(obtener(0));
-        for (int i = 1; i < _longitud; i++) {
-            copia.agregarAtras(obtener(i));
-        }
-        return copia;
-    }
-
-    public ListaEnlazada(ListaEnlazada<T> lista) {
-        ListaEnlazada copia = lista.copiar();
-        _primero = copia._primero;
-        _ultimo = copia._ultimo;
-        _longitud = copia._longitud;
-    }
     
-    @Override
-    public String toString() {
-        String out = "[";
-
-        for (int i = 0; i < _longitud - 1; i++) {
-            out = out + obtener(i).toString() + ", ";
-        }
-
-        out = out + obtener(_longitud-1).toString() + "]";
-        return out;
-    }
-
-
 }
