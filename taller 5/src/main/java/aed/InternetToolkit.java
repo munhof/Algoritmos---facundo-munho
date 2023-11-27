@@ -4,17 +4,17 @@ public class InternetToolkit {
     public InternetToolkit() {
     }
 
-    private Fragment[] insertionSort(Fragment[] input){
+    private Fragment[] insertionSort(Fragment[] input) {
         int largo = input.length;
         if (largo > 0) {
             int i = 1;
             while (i < largo) {
                 int j = i;
-                while (j > 0  && input[j-1].compareTo(input[j]) > 0) {
-                    Fragment aux = new Fragment(input[j]);
+                while (j > 0 && input[j - 1].compareTo(input[j]) > 0) {
+                    Fragment aux = input[j];
                     input[j] = input[j - 1];
                     input[j - 1] = aux;
-                    j --;
+                    j--;
                 }
                 i++;
             }
@@ -49,14 +49,13 @@ public class InternetToolkit {
 
 
     public IPv4Address[] sortIPv4(String[] ipv4) {
-        // IMPLEMENTAR RadixSort
         IPv4Address[] sortIPv4 =  new IPv4Address[ipv4.length];
         for (int i = 0; i < ipv4.length; i++) {
             sortIPv4[i] = new IPv4Address(ipv4[i]);
         }
         int i = 3;
         while (i>=0) {
-            final ListaEnlazada<IPv4Address>[] bucket = new ListaEnlazada[256];
+            ListaEnlazada<IPv4Address>[] bucket = new ListaEnlazada[256];
             for (int j = 0; j < ipv4.length; j++) {
                 IPv4Address ip = sortIPv4[j];
                 if(bucket[ip.getOctet(i)] != null){
